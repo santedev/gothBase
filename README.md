@@ -67,7 +67,7 @@ In the **public/scripts** directory, you'll find files like htmx.min.js, jquery.
 
 With the default setup, which includes JavaScript minified files, you're equipped to use jQuery's ecosystem if needed or leverage Alpine UI libraries with Tailwind UI. Explore [Pines JS](https://devdojo.com/pines), [Penguin UI](https://www.penguinui.com/), and [Alpine UI](https://alpinejs.dev/components) Components for more.
 
-To add your own JavaScript scripts, place them in the **public/scripts** folder for consistency. Then, include them in **views/layout/** if you want to add the script to the base layout, either within the HTML <head> or <body> tags using the Templ component.
+To add your own JavaScript scripts, place them in the **public/scripts** folder for consistency. Then, include them in **views/layout/** if you want to add the script to the base layout, either within the HTML `<head>` or `<body>` tags using the Templ component.
 
 Similarly, the public directory is intended for your CSS files. You can create a css folder and add your stylesheets there, following a similar process as with JavaScript.
 
