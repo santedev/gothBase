@@ -17,6 +17,7 @@ git clone https://github.com/santedev/gothBase
 - Install Golang [here](https://go.dev/doc/install)
 
 - Install Templ [here](https://templ.guide/quick-start/installation/)
+
 Or run next command to install templ:
 ```bash
 go install github.com/a-h/templ/cmd/templ@latest
