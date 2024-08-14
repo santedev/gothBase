@@ -1,7 +1,7 @@
 
 # GothBase
 
-GothBase is a Go template optimized for Linux development, using Air and a Makefile, along with the Goth and Gotth stack.
+GothBase is a Go templating system optimized for Linux development, using Air and a Makefile, along with the Goth and Gotth stack.
 
 ## Requirements: 
 Ensure you have Golang and Linux. WSL may work if it supports curl, go commands, and chmod. 
