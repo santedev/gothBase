@@ -1,0 +1,54 @@
+package layouts
+
+{{- if and (or .Auth .Default) (not .Minimalistic) }}
+
+import (
+ "github.com/markbates/goth" 
+ "fmt"
+ )
+ 
+templ Base(nav bool, user goth.User) {
+{{- else }}
+templ Base() {
+{{- end }}
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- <link rel="icon" type="image/x-icon" href="/public/favico.ico"/> -->
+      {{- if and (or .Tailwind .Default) (not .Minimalistic) }}
+      <link rel="stylesheet" href="/public/styles.css" />  
+      {{- end }}    
+      {{- if and (or .Htmx .Default) (not .Minimalistic) }}
+      <script src="/public/scripts/htmx.min.js" defer></script>
+      {{- end }}
+      {{- if and (or .Javascript .Default) (not .Minimalistic) }}
+      <script src="/public/scripts/alpine.js" defer></script>
+      <script src="/public/scripts/jquery.min.js" defer></script>
+      {{- end }}
+      <title>{{ .ProjectName }}</title>
+    </head>
+    <body>
+    {{- if and (or .Auth .Default) (not .Minimalistic) }}
+      if nav {
+        <nav class="flex w-full bg-slate-900 text-slate-300 text-xl px-9 p-4">
+          <a href="/">Home</a>
+          <a href="/jobs/saved/page" class="ml-5">saved</a>
+            if user.Name != "" {
+              <a
+                href={ templ.SafeURL(fmt.Sprintf("/auth/logout/%s", user.Provider)) }
+                class="ml-auto text-red-400"
+              >Logout</a>
+              <span class="ml-6">{ user.Name }</span>      
+              <img src={ user.AvatarURL } class="w-8 h-8 rounded-full ml-2"/>
+            } else {
+              <a href={templ.SafeURL("/login")} class="ml-auto">login</a>
+            }
+        </nav>
+      }    
+      {{- end }}  
+      {children...}
+    </body>
+  </html>
+}

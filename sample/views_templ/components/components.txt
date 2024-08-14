@@ -1,0 +1,5 @@
+package components
+
+templ ComponentHelloWorld() {
+  <h1>hello world!</h1>
+}

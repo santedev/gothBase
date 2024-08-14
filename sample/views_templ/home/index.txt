@@ -1,0 +1,25 @@
+package home
+
+import (
+  "{{ .ProjectName }}/views/layouts"
+ {{- if (not .Minimalistic) }}
+  "{{ .ProjectName }}/views/components"
+ {{- end }}
+ {{- if and (or .Auth .Default) (not .Minimalistic) }}
+	"github.com/markbates/goth"
+ {{- end }}
+)
+
+{{- if and (or .Auth .Default) (not .Minimalistic) }}
+templ Index(user goth.User) {
+  @layouts.Base(true, user) {
+   @components.ComponentHelloWorld()
+  }
+}
+{{- else }}
+templ Index() {
+ @layouts.Base() {
+    @components.ComponentHelloWorld()
+  }
+}
+{{- end }}

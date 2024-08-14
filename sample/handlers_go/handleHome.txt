@@ -1,0 +1,31 @@
+package handlers
+
+import (
+	"{{ .ProjectName }}/handlers/render"
+	"{{ .ProjectName }}/views/home"
+	"net/http"
+	{{- if and (or .Auth .Default) (not .Minimalistic) }}
+
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/gothic"
+ {{- end}}
+)
+
+func HandleHome(w http.ResponseWriter, r *http.Request) error {
+ {{- if and (or .Auth .Default) (not .Minimalistic) }}
+	if checkCompleteUserAuth(r) {
+		user, err := gothic.CompleteUserAuth(w, r)
+		if err != nil {
+			return err
+		}
+		return render.Template(w, r, home.Index(user))
+	}
+	user, ok := userFallback(r)
+	if !ok {
+		return render.Template(w, r, home.Index(goth.User{}))
+	}
+	return render.Template(w, r, home.Index(user))
+ {{- else}}
+ return render.Template(w, r, home.Index())
+ {{- end }}
+}

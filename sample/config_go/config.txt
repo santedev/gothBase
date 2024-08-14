@@ -1,0 +1,116 @@
+package config
+
+import (
+	"fmt"
+	"os"
+	"strconv"
+
+	"github.com/joho/godotenv"
+)
+
+type Config struct {
+	Production              bool
+	PublicHost              string
+	Port                    string
+ {{- if and (or .DatabaseSQL .Default) (not .Minimalistic) }}
+	DBPort                  string
+	DBUser                  string
+	DBHost                  string
+	DBPassword              string
+	DBAddress               string
+	DBName                  string
+	DBsslMode               string
+ {{- end }}
+ {{- if and (or .Auth .Default) (not .Minimalistic) }}
+	CookiesAuthSecret       string
+	CookiesAuthAgeInSeconds int
+	CookiesAuthIsSecure     bool
+	CookiesAuthIsHttpOnly   bool
+	GoogleKey               string
+	GoogleSecret            string
+	DiscordKey              string
+	DiscordSecret           string
+	GithubKey               string
+	GithubSecret            string
+ {{- end }}
+}
+
+{{- if and (or .Auth .Default) (not .Minimalistic) }}
+const (
+	twoDaysInSeconds = 60 * 60 * 24 * 2
+)
+
+{{- end }}
+var Envs = initConfig()
+
+func initConfig() Config {
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("Error loading .env file")
+	}
+	return Config{
+		Production: getEnvAsBool("PROD", false),
+		PublicHost: getEnv("HOST", "http://localhost"),
+		Port:       getEnv("PORT", "8000"),
+
+  {{- if and (or .DatabaseSQL .Default) (not .Minimalistic) }}
+  DBPort:     getEnv("DB_PORT", "5432"),
+		DBHost:     getEnv("DB_HOST", "host"),
+		DBUser:     getEnv("DB_USER", "root"),
+		DBPassword: getEnv("DB_PASSWORD", "mypassword"),
+		DBAddress:  fmt.Sprintf("%s:%s", getEnv("DB_HOST", "127.0.0.1"), getEnv("DB_PORT", "5432")),
+		DBName:     getEnv("DB_NAME", "DbName"),
+		DBsslMode:  getEnv("DB_SSL_MODE", "require"),
+  
+  {{- end }}
+  {{- if and (or .Auth .Default) (not .Minimalistic) }}
+		CookiesAuthSecret:       getEnv("COOKIES_AUTH_SECRET", "secret_cookie"),
+		CookiesAuthAgeInSeconds: getEnvAsInt("COOKIES_AUTH_AGE", twoDaysInSeconds),
+		CookiesAuthIsSecure:     getEnvAsBool("COOKIES_AUTH_IS_SECURE", true),
+		CookiesAuthIsHttpOnly:   getEnvAsBool("COOKIES_AUTH_IS_HTTP_ONLY", true),
+		GoogleKey:               getEnvOrError("GOOGLE_KEY"),
+		GoogleSecret:            getEnvOrError("GOOGLE_SECRET"),
+		DiscordKey:              getEnvOrError("DISCORD_KEY"),
+		DiscordSecret:           getEnvOrError("DISCORD_SECRET"),
+		GithubKey:               getEnvOrError("GITHUB_KEY"),
+		GithubSecret:            getEnvOrError("GITHUB_SECRET"),
+  {{- end }}
+	}
+}
+
+func getEnv(key, fallback string) string {
+	value := os.Getenv(key)
+	if len(value) > 0 {
+		return value
+	}
+
+	return fallback
+}
+
+func getEnvOrError(key string) string {
+	value := os.Getenv(key)
+	if len(value) > 0 {
+		return value
+	}
+
+	panic(fmt.Sprintf("Environment variable %s is not set", key))
+}
+
+func getEnvAsInt(key string, fallback int) int {
+	value := os.Getenv(key)
+	i, err := strconv.Atoi(value)
+	if err != nil {
+		return fallback
+	}
+
+	return i
+}
+
+func getEnvAsBool(key string, fallback bool) bool {
+	value := os.Getenv(key)
+	b, err := strconv.ParseBool(value)
+	if err != nil {
+		return fallback
+	}
+
+	return b
+}
