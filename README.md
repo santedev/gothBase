@@ -26,13 +26,19 @@ go install github.com/a-h/templ/cmd/templ@latest
 ## Run CLI
 - Build the CLI:
 ```bash
-go build -o ./GothBase
+cd cli
 ```
 ```bash
-./GothBase
+go build -o ../GothBase
+```
+```bash
+../GothBase
 ```
 Or run next command:
 
+```bash
+cd cli
+```
 ```bash
 go run .
 ```
