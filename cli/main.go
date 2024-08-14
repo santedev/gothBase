@@ -26,7 +26,7 @@ type model struct {
 }
 
 const (
-	templateTemplStr =
+	gothBaseStr =
 		"                                               \n" +
 		" (               )    )   (                   \n" +
 		" )\\ )         ( /( ( /( ( )\\     )        (   \n" +
@@ -119,7 +119,7 @@ func (m model) View() string {
 }
 
 func stepView1(m model) string {
-	s := templateTemplStr + "\n\n"
+	s := gothBaseStr + "\n\n"
 
 	if m.message != "" {
 		s += "\n" + m.message + "\n"
