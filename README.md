@@ -1,97 +1,79 @@
-GothBase
+
+# GothBase
 
 GothBase is a Go template optimized for Linux development, using Air and a Makefile, along with the Goth and Gotth stack.
-Installation
-On Linux
 
-    Install Golang: Follow the instructions here.
+## Requirements: 
+Ensure you have Golang and Linux. WSL may work if it supports curl, go commands, and chmod. 
 
-    Install Templ:
-        For installation, follow the guide here, or run:
+Makefile and Air work with Bash commands.
 
-        bash
+## Installation steps
+- clone the project with the next command: 
+```bash
+git clone https://github.com/santedev/gothBase
+```
 
-    go install github.com/a-h/templ/cmd/templ@latest
+- Install Golang [here](https://go.dev/doc/install)
 
-Build the CLI:
+- Install Templ [here](https://templ.guide/quick-start/installation/)
+Or run next command to install templ:
+```bash
+go install github.com/a-h/templ/cmd/templ@latest
+```
+## Run CLI
+- Build the CLI:
+```bash
+go build -o ./GothBase
+```
+```bash
+./GothBase
+```
+Or run next command:
 
-    To get the binary:
-
-    bash
-
-go build -o ../GothBase
-
-Or run:
-
-bash
-
-        cd cli && go run .
-
-    Note: The output directory will be one level up from the cli folder.
-
-    Requirements: Ensure you have Golang and Linux. WSL can work if it supports curl, go commands, and chmod. Makefile and Air work with Bash.
-
-On Windows (PowerShell)
-
-    Run the CLI:
-        Navigate to the cli directory:
-
-        powershell
-
-cd cli
+```bash
 go run .
+```
+**Note**: The output directory will be one level up from the cli cloned folder.
+## Command Line Navigation
+Command Line Navigation when input is required
+- **Next Step**: Key **`Enter`**.
+- **Previous Step**: Key **`ctrl+u`**.
+- **Confirm Creation**: Key **`Enter`**. 
 
-Or build the binary:
+Command Line Navigation
 
-powershell
-
-    cd cli
-    go build -o ../GothBase
-    ../GothBase
-
-Setup Project:
-
-    Set your project name in the first input.
-    Use Enter to go to the next step, and Ctrl+U to go back.
-    Select options using keyboard arrows (up/down) and Enter to select. Use k for moving up, j for moving down, n for next step, and b for the previous step. Use Space or Enter to select options. Press y or n to confirm or cancel.
-
-Post-Setup:
-
-    If successful, run:
-
-    powershell
-
+- **Move Up/Down**: Use arrow keys or **`k`** and **`j`**.
+- **Next Step**: Arrow **`right`** or **`n`**.
+- **Previous Step**: Arrow **`left`** or **`b`**.
+- **Select Options**: **`Enter`** or **`Space`**.
+- **Confirm Creation**: Press **`y`** to confirm or **`n`** 
+    to cancel.
+## Post-Setup
+with templ installed run next command 
+```bash
 templ generate
+```
+if errors encountered try
+```bash
+~/go/bin/templ generate
+```
+## For windows users
 
-If errors occur, try:
+Here's how you can update the manual installation instructions for Windows, specifically for PowerShell:
+Manual Installation for Windows (PowerShell)
 
-powershell
+- Install TailwindCSS:
 
-    ~/go/bin/templ generate
-
-Manual Installation for PowerShell:
-
-    Install TailwindCSS:
-
-    powershell
-
+```powershell
 Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-win-x64.zip" -OutFile "tailwindcss.zip"
 Expand-Archive -Path "tailwindcss.zip" -DestinationPath "."
 Remove-Item -Path "tailwindcss.zip"
+```
+- Install JS Min Files:
 
-Install JS Min Files:
-
-powershell
-
-        Invoke-WebRequest -Uri "https://cdn.jsdelivr.net/npm/htmx.org/dist/htmx.min.js" -OutFile "public/scripts/htmx.min.js"
-        Invoke-WebRequest -Uri "https://cdn.jsdelivr.net/npm/alpinejs/dist/cdn.min.js" -OutFile "public/scripts/alpine.js"
-        Invoke-WebRequest -Uri "https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js" -OutFile "public/scripts/jquery.min.js"
-
-For detailed command-line navigation, refer to the Command Line Navigation section.
-Command Line Navigation
-
-    Move Up/Down: Use arrow keys or k/j.
-    Next Step: Arrow right or n.
-    Previous Step: Arrow left or b.
-    Select Options: Enter or Space.
-    Confirm Creation: Press y to confirm or n to cancel.
+```powershell
+Invoke-WebRequest -Uri "https://cdn.jsdelivr.net/npm/htmx.org/dist/htmx.min.js" -OutFile "public/scripts/htmx.min.js"
+Invoke-WebRequest -Uri "https://cdn.jsdelivr.net/npm/alpinejs/dist/cdn.min.js" -OutFile "public/scripts/alpine.js"
+Invoke-WebRequest -Uri "https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js" -OutFile "public/scripts/jquery.min.js"
+```
