@@ -1,0 +1,41 @@
+package layouts
+
+import (
+ "github.com/markbates/goth" 
+ "fmt"
+ )
+ 
+templ Base(nav bool, user goth.User) {
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- <link rel="icon" type="image/x-icon" href="/public/favico.ico"/> -->
+      <link rel="stylesheet" href="/public/styles/bundle.min.css" />
+      <script src="/public/scripts/htmx.min.js" defer></script>
+      <script src="/public/scripts/alpine.js" defer></script>
+      <script src="/public/scripts/jquery.min.js" defer></script>
+      <script type="module" src="/public/scripts/bundle.min.js defer"></script>
+      <title>project</title>
+    </head>
+    <body>
+      if nav {
+        <nav class="flex w-full bg-slate-900 text-slate-300 text-xl px-9 p-4">
+          <a href="/">Home</a>
+            if user.Name != "" {
+              <a
+                href={ templ.SafeURL(fmt.Sprintf("/auth/logout/%s", user.Provider)) }
+                class="ml-auto text-red-400"
+              >Logout</a>
+              <span class="ml-6">{ user.Name }</span>      
+              <img src={ user.AvatarURL } class="w-8 h-8 rounded-full ml-2"/>
+            } else {
+              <a href={templ.SafeURL("/login")} class="ml-auto">login</a>
+            }
+        </nav>
+      }  
+      {children...}
+    </body>
+  </html>
+}

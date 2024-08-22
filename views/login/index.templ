@@ -1,0 +1,12 @@
+package login
+
+import (
+ "project/views/layouts"
+ "github.com/markbates/goth"
+)
+
+//here you should write your login page
+templ Index(){
+ @layouts.Base(false, goth.User{}){  
+   }
+}

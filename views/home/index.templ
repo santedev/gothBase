@@ -1,0 +1,12 @@
+package home
+
+import (
+  "project/views/layouts"
+  "project/views/components"
+	"github.com/markbates/goth"
+)
+templ Index(user goth.User) {
+  @layouts.Base(true, user) {
+   @components.ComponentHelloWorld()
+  }
+}
