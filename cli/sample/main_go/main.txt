@@ -1,0 +1,84 @@
+package main
+
+import (
+	"log"
+	"log/slog"
+	"net/http"
+	"{{ .ProjectName }}/config"
+	{{- if (not .Minimalistic)}}
+	h "{{ .ProjectName }}/handlers"
+	m "{{ .ProjectName }}/handlers/middleware"
+	{{- end }}
+	{{- if and (or .Auth .Default) (not .Minimalistic) }}
+	"{{ .ProjectName }}/services/auth"
+	{{- end }}
+ {{- if and (or .DatabaseSQL .Default) (not .Minimalistic) }}
+	"{{ .ProjectName }}/services/store"
+	{{- end }}
+	
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	{{- if (not .Minimalistic)}}
+	"github.com/go-chi/cors"
+	{{- end }}
+)
+
+func main() {
+	{{- if and (or .DatabaseSQL .Default) (not .Minimalistic) }}
+	db, err := store.NewSQLStorage(store.Sqlconfig())
+	if err != nil {
+		log.Fatal(err)
+	}
+	s := store.NewStore(db)
+	//store.InitStorage(db) //SET UP YOUR DB BEFORE COMMENTING OUT
+	store.DB = s
+
+	{{- end }}
+	r := chi.NewRouter()
+
+	{{- if (not .Minimalistic) }}
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, //CHANGE THIS IN PRODUCTION
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           15,
+	})
+
+	{{- end }}
+	{{- if and (or .Auth .Default) (not .Minimalistic) }}
+	sessionStore := auth.NewCookieStore(auth.SessionOptions{
+		CookiesKey: config.Envs.CookiesAuthSecret,
+		MaxAge:     config.Envs.CookiesAuthAgeInSeconds,
+		HttpOnly:   config.Envs.CookiesAuthIsHttpOnly,
+		Secure:     config.Envs.CookiesAuthIsSecure,
+	})
+	authService := auth.NewAuthService(sessionStore)
+
+	authHandler := h.New(authService)
+	{{- end }}
+	{{- if (not .Minimalistic )}}
+	r.Use(c.Handler)
+	{{- end }}
+	r.Use(middleware.Logger)
+
+	{{- if (not .Minimalistic)}}
+	r.Handle("/*", public())
+	r.Get("/", m.LogErr(h.HandleHome))
+
+	{{- end }}
+	{{- if and (or .Auth .Default) (not .Minimalistic) }}
+	
+	r.Get("/auth/{provider}", m.LogErr(authHandler.HandleProviderLogin))
+	r.Get("/auth/{provider}/callback", m.LogErr(authHandler.HandleAuthCallback))
+	r.Get("/auth/logout/{provider}", m.LogErr(authHandler.HandleAuthLogout))
+	r.Get("/login", m.LogErr(h.HandleLogin))
+
+	{{- end }}
+	listenAddr := ":" + config.Envs.Port
+	slog.Info("HTTP server started", "address", "http://localhost"+listenAddr)
+	if err := http.ListenAndServe(listenAddr, r); err != nil {
+		log.Println(err.Error())
+	}
+}
